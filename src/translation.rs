@@ -222,6 +222,15 @@ impl<T: Copy, Src, Dst> Translation2D<T, Src, Dst> {
         point2(p.x + self.x, p.y + self.y)
     }
 
+    /// Translate a point by inverse and cast its unit.
+    #[inline]
+    pub(crate) fn transform_point_inv(&self, p: Point2D<T, Dst>) -> Point2D<T::Output, Src>
+    where
+        T: Sub,
+    {
+        point2(p.x - self.x, p.y - self.y)
+    }
+
     /// Translate a rectangle and cast its unit.
     #[inline]
     pub fn transform_rect(&self, r: &Rect<T, Src>) -> Rect<T::Output, Dst>
@@ -619,6 +628,15 @@ impl<T: Copy, Src, Dst> Translation3D<T, Src, Dst> {
         T: Add,
     {
         point3(p.x + self.x, p.y + self.y, p.z + self.z)
+    }
+
+    /// Translate a point by inverse and cast its unit.
+    #[inline]
+    pub(crate) fn transform_point3d_inv(&self, p: &Point3D<T, Dst>) -> Point3D<T::Output, Src>
+    where
+        T: Sub,
+    {
+        point3(p.x - self.x, p.y - self.y, p.z - self.z)
     }
 
     /// Translate a point and cast its unit.

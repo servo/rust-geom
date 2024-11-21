@@ -14,6 +14,7 @@ use crate::length::Length;
 use crate::num::*;
 use crate::scale::Scale;
 use crate::size::{Size2D, Size3D};
+use crate::translation::{Translation2D, Translation3D};
 use crate::vector::{vec2, vec3, Vector2D, Vector3D};
 use core::cmp::{Eq, PartialEq};
 use core::fmt;
@@ -594,6 +595,15 @@ impl<T: Copy + Add<T, Output = T>, U> AddAssign<Vector2D<T, U>> for Point2D<T, U
     }
 }
 
+impl<T: Copy + Add, Src, Dst> Add<Translation2D<T, Src, Dst>> for Point2D<T, Src> {
+    type Output = Point2D<T::Output, Dst>;
+
+    #[inline]
+    fn add(self, other: Translation2D<T, Src, Dst>) -> Self::Output {
+        other.transform_point(self)
+    }
+}
+
 impl<T: Sub, U> Sub for Point2D<T, U> {
     type Output = Vector2D<T::Output, U>;
 
@@ -633,6 +643,15 @@ impl<T: Copy + Sub<T, Output = T>, U> SubAssign<Vector2D<T, U>> for Point2D<T, U
     #[inline]
     fn sub_assign(&mut self, other: Vector2D<T, U>) {
         *self = *self - other;
+    }
+}
+
+impl<T: Copy + Sub, Src, Dst> Sub<Translation2D<T, Src, Dst>> for Point2D<T, Dst> {
+    type Output = Point2D<T::Output, Src>;
+
+    #[inline]
+    fn sub(self, other: Translation2D<T, Src, Dst>) -> Self::Output {
+        other.transform_point_inv(self)
     }
 }
 
@@ -1428,6 +1447,15 @@ impl<T: Copy + Add<T, Output = T>, U> AddAssign<Vector3D<T, U>> for Point3D<T, U
     }
 }
 
+impl<T: Copy + Add, Src, Dst> Add<Translation3D<T, Src, Dst>> for Point3D<T, Src> {
+    type Output = Point3D<T::Output, Dst>;
+
+    #[inline]
+    fn add(self, other: Translation3D<T, Src, Dst>) -> Self::Output {
+        other.transform_point3d(&self)
+    }
+}
+
 impl<T: Sub, U> Sub for Point3D<T, U> {
     type Output = Vector3D<T::Output, U>;
 
@@ -1472,6 +1500,15 @@ impl<T: Copy + Sub<T, Output = T>, U> SubAssign<Vector3D<T, U>> for Point3D<T, U
     #[inline]
     fn sub_assign(&mut self, other: Vector3D<T, U>) {
         *self = *self - other;
+    }
+}
+
+impl<T: Copy + Sub, Src, Dst> Sub<Translation3D<T, Src, Dst>> for Point3D<T, Dst> {
+    type Output = Point3D<T::Output, Src>;
+
+    #[inline]
+    fn sub(self, other: Translation3D<T, Src, Dst>) -> Self::Output {
+        other.transform_point3d_inv(&self)
     }
 }
 
